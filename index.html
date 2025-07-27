@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Knight - P2P Betting Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --light: #f1f1f1;
+            --dark: #0d0d1a;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #e17055;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: rgba(13, 13, 26, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: var(--highlight);
+            font-size: 2rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(to right, var(--highlight), var(--warning));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover, nav a.active {
+            background: var(--accent);
+            color: var(--highlight);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--highlight);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #ff2e4f;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--highlight);
+            color: var(--highlight);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #009c7d;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: var(--dark);
+        }
+        
+        .btn-warning:hover {
+            background: #f9b747;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d65a3d;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--light);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2.2rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--highlight);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+        
+        .card {
+            background: rgba(26, 26, 46, 0.7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .admin-panel {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(13, 13, 26, 0.5);
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--highlight);
+        }
+        
+        .bets-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .bet-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bet-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .bet-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .bet-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-open {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+        }
+        
+        .status-closed {
+            background: rgba(225, 112, 85, 0.2);
+            color: var(--danger);
+        }
+        
+        .status-resolved {
+            background: rgba(253, 203, 110, 0.2);
+            color: var(--warning);
+        }
+        
+        .bet-description {
+            margin: 1rem 0;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        
+        .bet-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .bet-option {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: rgba(15, 52, 96, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .bet-option:hover {
+            background: rgba(15, 52, 96, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .bet-option.selected {
+            background: var(--highlight);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(233, 69, 96, 0.3);
+        }
+        
+        .bet-option h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .bet-option .odds {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        
+        .bet-action {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .bet-amount {
+            flex: 1;
+        }
+        
+        .bet-submit {
+            flex: 1;
+        }
+        
+        .bet-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        
+        .bet-stats span {
+            color: var(--light);
+            font-weight: 600;
+        }
+        
+        .user-bets {
+            margin-top: 3rem;
+        }
+        
+        .user-bets-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .user-bet-card {
+            background: rgba(22, 33, 62, 0.7);
+            border-radius: 10px;
+            padding: 1.2rem;
+            border-left: 4px solid var(--highlight);
+        }
+        
+        .user-bet-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .user-bet-title {
+            font-weight: 600;
+        }
+        
+        .user-bet-amount {
+            color: var(--highlight);
+            font-weight: 700;
+        }
+        
+        .user-bet-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        .winner-badge {
+            background: var(--success);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            background: var(--highlight);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .admin-section {
+            margin-bottom: 2rem;
+        }
+        
+        .admin-section h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .closed-bets-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .closed-bet-card {
+            background: rgba(22, 33, 62, 0.7);
+            border-radius: 10px;
+            padding: 1.2rem;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .closed-bet-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        
+        .closed-bet-title {
+            font-weight: 600;
+        }
+        
+        .closed-bet-status {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(225, 112, 85, 0.2);
+            color: var(--danger);
+        }
+        
+        .winner-selection {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .winner-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .winner-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            background: rgba(15, 52, 96, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .winner-option:hover {
+            background: rgba(15, 52, 96, 0.6);
+        }
+        
+        .winner-option.selected {
+            background: var(--success);
+        }
+        
+        .confirm-winner-btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .opponents-list {
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1rem;
+        }
+        
+        .opponent-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .opponent-name {
+            color: #aaa;
+        }
+        
+        .opponent-amount {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+        
+        .opponent-option {
+            font-weight: 600;
+        }
+        
+        .no-opponents {
+            text-align: center;
+            color: #777;
+            font-style: italic;
+            padding: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--highlight);
+            color: var(--highlight);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .player-list {
+            margin-top: 1rem;
+            background: rgba(15, 52, 96, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .player-list h4 {
+            margin-bottom: 0.8rem;
+            color: var(--highlight);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .player-item:last-child {
+            border-bottom: none;
+        }
+        
+        .player-name {
+            color: #ddd;
+        }
+        
+        .player-amount {
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        .bet-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .bets-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .closed-bets-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chess-knight"></i>
+                    <h1>BLACK KNIGHT</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active" id="bets-tab">Bets</a></li>
+                        <li><a href="#" id="my-bets-tab">My Bets</a></li>
+                        <li><a href="#" id="admin-tab">Admin</a></li>
+                    </ul>
+                </nav>
+                <div class="user-actions">
+                    <button class="btn btn-secondary"><i class="fas fa-wallet"></i> $1,250</button>
+                    <button class="btn btn-primary"><i class="fas fa-user"></i> Admin</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Peer-to-Peer Betting</h2>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="all-bets">All Bets</div>
+            <div class="tab" data-tab="my-bets">My Bets</div>
+        </div>
+        
+        <div class="tab-content active" id="all-bets-content">
+            <div class="bets-container" id="bets-container">
+                <!-- Bet cards will be generated here -->
+            </div>
+        </div>
+        
+        <div class="tab-content" id="my-bets-content">
+            <div class="user-bets-list" id="user-bets-list">
+                <!-- User bets will be generated here -->
+            </div>
+        </div>
+        
+        <div class="admin-panel" id="admin-panel">
+            <h2 class="section-title">Admin Panel</h2>
+            
+            <div class="admin-section">
+                <h3><i class="fas fa-plus-circle"></i> Create New Bet</h3>
+                <div class="card">
+                    <form id="create-bet-form">
+                        <div class="form-group">
+                            <label for="bet-title">Bet Title</label>
+                            <input type="text" id="bet-title" class="form-control" placeholder="Enter bet title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bet-description">Description</label>
+                            <textarea id="bet-description" class="form-control" rows="3" placeholder="Enter bet description" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="option-a">Option A</label>
+                            <input type="text" id="option-a" class="form-control" placeholder="Option A" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="option-b">Option B</label>
+                            <input type="text" id="option-b" class="form-control" placeholder="Option B" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="odds-a">Odds for Option A</label>
+                            <input type="number" id="odds-a" class="form-control" placeholder="1.5" step="0.1" min="1.0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="odds-b">Odds for Option B</label>
+                            <input type="number" id="odds-b" class="form-control" placeholder="2.0" step="0.1" min="1.0" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Create Bet</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h3><i class="fas fa-trophy"></i> Confirm Winners</h3>
+                <div class="card">
+                    <p>Select a closed bet and choose the winning option to distribute winnings.</p>
+                    <div class="closed-bets-list" id="closed-bets-list">
+                        <!-- Closed bets will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <div class="notification" id="notification">
+        Bet created successfully!
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2023 Black Knight P2P Betting Platform. All rights reserved.</p>
+            <p>This is a demo application for educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data for bets
+        let bets = [
+            {
+                id: 1,
+                title: "Champions League Final",
+                description: "Which team will win the 2023 Champions League final between Manchester City and Inter Milan?",
+                optionA: "Manchester City",
+                optionB: "Inter Milan",
+                oddsA: 1.8,
+                oddsB: 2.2,
+                status: "open",
+                totalPool: 12500,
+                betsPlaced: 42,
+                winner: null
+            },
+            {
+                id: 2,
+                title: "Bitcoin Price Prediction",
+                description: "Will Bitcoin reach $30,000 by the end of June 2023?",
+                optionA: "Yes",
+                optionB: "No",
+                oddsA: 2.5,
+                oddsB: 1.6,
+                status: "closed",
+                totalPool: 8750,
+                betsPlaced: 28,
+                winner: null
+            },
+            {
+                id: 3,
+                title: "Election Results",
+                description: "Who will win the 2024 US Presidential Election?",
+                optionA: "Incumbent",
+                optionB: "Challenger",
+                oddsA: 1.9,
+                oddsB: 2.1,
+                status: "closed",
+                totalPool: 21500,
+                betsPlaced: 67,
+                winner: null
+            }
+        ];
+        
+        // Sample user bets
+        let userBets = [
+            {
+                id: 1,
+                betId: 1,
+                userId: "player1",
+                userName: "Alex Johnson",
+                title: "Champions League Final",
+                selectedOption: "Manchester City",
+                odds: 1.8,
+                amount: 100,
+                potentialWin: 180,
+                status: "open",
+                winner: false
+            },
+            {
+                id: 2,
+                betId: 1,
+                userId: "player2",
+                userName: "Sarah Miller",
+                title: "Champions League Final",
+                selectedOption: "Inter Milan",
+                odds: 2.2,
+                amount: 150,
+                potentialWin: 330,
+                status: "open",
+                winner: false
+            },
+            {
+                id: 3,
+                betId: 1,
+                userId: "player3",
+                userName: "Mike Thompson",
+                title: "Champions League Final",
+                selectedOption: "Manchester City",
+                odds: 1.8,
+                amount: 200,
+                potentialWin: 360,
+                status: "open",
+                winner: false
+            },
+            {
+                id: 4,
+                betId: 2,
+                userId: "player4",
+                userName: "Emma Wilson",
+                title: "Bitcoin Price Prediction",
+                selectedOption: "No",
+                odds: 1.6,
+                amount: 50,
+                potentialWin: 80,
+                status: "open",
+                winner: false
+            },
+            {
+                id: 5,
+                betId: 3,
+                userId: "player5",
+                userName: "David Brown",
+                title: "Election Results",
+                selectedOption: "Challenger",
+                odds: 2.1,
+                amount: 200,
+                potentialWin: 420,
+                status: "open",
+                winner: false
+            }
+        ];
+        
+        // DOM Elements
+        const betsContainer = document.getElementById('bets-container');
+        const adminPanel = document.getElementById('admin-panel');
+        const userBetsList = document.getElementById('user-bets-list');
+        const createBetForm = document.getElementById('create-bet-form');
+        const notification = document.getElementById('notification');
+        const closedBetsList = document.getElementById('closed-bets-list');
+        
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById(`${tabName}-content`).classList.add('active');
+                
+                // Re-render content for the active tab
+                if (tabName === 'all-bets') {
+                    renderBets();
+                } else if (tabName === 'my-bets') {
+                    renderUserBets();
+                }
+            });
+        });
+        
+        // Navigation
+        document.getElementById('bets-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSection('bets');
+        });
+        
+        document.getElementById('my-bets-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSection('my-bets');
+        });
+        
+        document.getElementById('admin-tab').addEventListener('click', function(e) {
+            e.preventDefault();
+            showSection('admin');
+        });
+        
+        function showSection(section) {
+            // Hide all sections
+            document.querySelector('.tabs').style.display = 'none';
+            document.getElementById('all-bets-content').style.display = 'none';
+            document.getElementById('my-bets-content').style.display = 'none';
+            adminPanel.classList.remove('active');
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('nav a').forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected section
+            if (section === 'bets') {
+                document.querySelector('.tabs').style.display = 'flex';
+                document.getElementById('all-bets-content').style.display = 'block';
+                document.getElementById('bets-tab').classList.add('active');
+                renderBets();
+            } else if (section === 'my-bets') {
+                document.querySelector('.tabs').style.display = 'flex';
+                document.getElementById('my-bets-content').style.display = 'block';
+                document.getElementById('my-bets-tab').classList.add('active');
+                renderUserBets();
+            } else if (section === 'admin') {
+                adminPanel.classList.add('active');
+                document.getElementById('admin-tab').classList.add('active');
+                renderClosedBets();
+            }
+        }
+        
+        // Render all bets with player lists
+        function renderBets() {
+            betsContainer.innerHTML = '';
+            
+            const openBets = bets.filter(bet => bet.status === 'open');
+            
+            if (openBets.length === 0) {
+                betsContainer.innerHTML = '<p class="card" style="text-align:center;padding:2rem;">No open bets available at the moment.</p>';
+                return;
+            }
+            
+            openBets.forEach(bet => {
+                const betCard = document.createElement('div');
+                betCard.className = 'card bet-card';
+                
+                // Get players for each option
+                const optionAPlayers = userBets.filter(ub => ub.betId === bet.id && ub.selectedOption === bet.optionA);
+                const optionBPlayers = userBets.filter(ub => ub.betId === bet.id && ub.selectedOption === bet.optionB);
+                
+                betCard.innerHTML = `
+                    <div class="bet-card-header">
+                        <h3 class="bet-title">${bet.title}</h3>
+                        <span class="bet-status status-open">OPEN</span>
+                    </div>
+                    <p class="bet-description">${bet.description}</p>
+                    <div class="bet-options">
+                        <div class="bet-option" data-option="a" data-bet-id="${bet.id}">
+                            <h3>${bet.optionA}</h3>
+                            <div class="odds">${bet.oddsA}</div>
+                        </div>
+                        <div class="bet-option" data-option="b" data-bet-id="${bet.id}">
+                            <h3>${bet.optionB}</h3>
+                            <div class="odds">${bet.oddsB}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-list">
+                        <h4>${bet.optionA} Players (${optionAPlayers.length})</h4>
+                        ${optionAPlayers.length > 0 ? 
+                            optionAPlayers.map(player => `
+                                <div class="player-item">
+                                    <div class="player-name">${player.userName}</div>
+                                    <div class="player-amount">$${player.amount}</div>
+                                </div>
+                            `).join('') : 
+                            '<div class="no-opponents">No players yet</div>'
+                        }
+                    </div>
+                    
+                    <div class="player-list">
+                        <h4>${bet.optionB} Players (${optionBPlayers.length})</h4>
+                        ${optionBPlayers.length > 0 ? 
+                            optionBPlayers.map(player => `
+                                <div class="player-item">
+                                    <div class="player-name">${player.userName}</div>
+                                    <div class="player-amount">$${player.amount}</div>
+                                </div>
+                            `).join('') : 
+                            '<div class="no-opponents">No players yet</div>'
+                        }
+                    </div>
+                    
+                    <div class="bet-action">
+                        <div class="bet-amount">
+                            <input type="number" class="form-control" placeholder="Bet amount" min="1" data-bet-id="${bet.id}">
+                        </div>
+                        <div class="bet-submit">
+                            <button class="btn btn-primary place-bet-btn" data-bet-id="${bet.id}">Place Bet</button>
+                        </div>
+                    </div>
+                    <div class="bet-details">
+                        <div>Total Pool: <span>$${bet.totalPool.toLocaleString()}</span></div>
+                        <div>Bets Placed: <span>${bet.betsPlaced}</span></div>
+                    </div>
+                `;
+                betsContainer.appendChild(betCard);
+            });
+            
+            // Add event listeners to bet options
+            document.querySelectorAll('.bet-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const betId = this.getAttribute('data-bet-id');
+                    const selectedOption = this.getAttribute('data-option');
+                    
+                    // Remove selection from all options in this bet
+                    document.querySelectorAll(`.bet-option[data-bet-id="${betId}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked option
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Add event listeners to place bet buttons
+            document.querySelectorAll('.place-bet-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const betId = this.getAttribute('data-bet-id');
+                    const amountInput = document.querySelector(`input[data-bet-id="${betId}"]`);
+                    const amount = parseFloat(amountInput.value);
+                    
+                    if (isNaN(amount) || amount <= 0) {
+                        alert('Please enter a valid bet amount');
+                        return;
+                    }
+                    
+                    // Find the selected option
+                    const selectedOption = document.querySelector(`.bet-option.selected[data-bet-id="${betId}"]`);
+                    if (!selectedOption) {
+                        alert('Please select an option');
+                        return;
+                    }
+                    
+                    const option = selectedOption.getAttribute('data-option');
+                    const bet = bets.find(b => b.id == betId);
+                    
+                    // Create user bet
+                    const userBet = {
+                        id: userBets.length + 1,
+                        betId: bet.id,
+                        userId: "currentPlayer",
+                        userName: "You",
+                        title: bet.title,
+                        selectedOption: option === 'a' ? bet.optionA : bet.optionB,
+                        odds: option === 'a' ? bet.oddsA : bet.oddsB,
+                        amount: amount,
+                        potentialWin: amount * (option === 'a' ? bet.oddsA : bet.oddsB),
+                        status: 'open',
+                        winner: false
+                    };
+                    
+                    userBets.push(userBet);
+                    
+                    // Update bet stats
+                    bet.totalPool += amount;
+                    bet.betsPlaced += 1;
+                    
+                    // Update wallet
+                    const walletBtn = document.querySelector('.btn-secondary');
+                    const currentBalance = parseFloat(walletBtn.textContent.replace(/[^0-9.-]+/g,""));
+                    walletBtn.innerHTML = `<i class="fas fa-wallet"></i> $${(currentBalance - amount).toFixed(2)}`;
+                    
+                    // Show notification
+                    showNotification('Bet placed successfully!');
+                    
+                    // Reset form
+                    amountInput.value = '';
+                    document.querySelectorAll(`.bet-option[data-bet-id="${betId}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Re-render bets to update stats
+                    renderBets();
+                });
+            });
+        }
+        
+        // Render user bets
+        function renderUserBets() {
+            userBetsList.innerHTML = '';
+            
+            // Get only current user's bets
+            const currentUserBets = userBets.filter(bet => bet.userId === "currentPlayer");
+            
+            if (currentUserBets.length === 0) {
+                userBetsList.innerHTML = '<p class="card" style="text-align:center;padding:2rem;">No bets placed yet.</p>';
+                return;
+            }
+            
+            currentUserBets.forEach(bet => {
+                const userBetCard = document.createElement('div');
+                userBetCard.className = 'user-bet-card';
+                userBetCard.innerHTML = `
+                    <div class="user-bet-header">
+                        <div class="user-bet-title">${bet.title}</div>
+                        <div class="user-bet-amount">$${bet.amount}</div>
+                    </div>
+                    <div>Bet on: <strong>${bet.selectedOption}</strong> ${bet.winner ? '<span class="winner-badge">WINNER</span>' : ''}</div>
+                    <div>Odds: <strong>${bet.odds}</strong></div>
+                    <div class="user-bet-details">
+                        <div>Potential Win: <span>$${bet.potentialWin.toFixed(2)}</span></div>
+                        <div>Status: <span>${bet.status}</span></div>
+                    </div>
+                `;
+                userBetsList.appendChild(userBetCard);
+            });
+        }
+        
+        // Render closed bets for winner confirmation
+        function renderClosedBets() {
+            closedBetsList.innerHTML = '';
+            
+            const closedBets = bets.filter(bet => bet.status === 'closed' && !bet.winner);
+            
+            if (closedBets.length === 0) {
+                closedBetsList.innerHTML = '<p>No closed bets awaiting winner confirmation.</p>';
+                return;
+            }
+            
+            closedBets.forEach(bet => {
+                const closedBetCard = document.createElement('div');
+                closedBetCard.className = 'closed-bet-card';
+                closedBetCard.innerHTML = `
+                    <div class="closed-bet-header">
+                        <div class="closed-bet-title">${bet.title}</div>
+                        <div class="closed-bet-status">CLOSED</div>
+                    </div>
+                    <p>${bet.description}</p>
+                    <div class="winner-selection">
+                        <p>Select the winning option:</p>
+                        <div class="winner-options">
+                            <div class="winner-option" data-option="a" data-bet-id="${bet.id}">
+                                <strong>${bet.optionA}</strong>
+                            </div>
+                            <div class="winner-option" data-option="b" data-bet-id="${bet.id}">
+                                <strong>${bet.optionB}</strong>
+                            </div>
+                        </div>
+                        <button class="btn btn-success confirm-winner-btn" data-bet-id="${bet.id}">
+                            <i class="fas fa-check-circle"></i> Confirm Winner
+                        </button>
+                    </div>
+                `;
+                closedBetsList.appendChild(closedBetCard);
+            });
+            
+            // Add event listeners to winner options
+            document.querySelectorAll('.winner-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const betId = this.getAttribute('data-bet-id');
+                    const selectedOption = this.getAttribute('data-option');
+                    
+                    // Remove selection from all options in this bet
+                    document.querySelectorAll(`.winner-option[data-bet-id="${betId}"]`).forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selection to clicked option
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Add event listeners to confirm winner buttons
+            document.querySelectorAll('.confirm-winner-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const betId = this.getAttribute('data-bet-id');
+                    const selectedOption = document.querySelector(`.winner-option.selected[data-bet-id="${betId}"]`);
+                    
+                    if (!selectedOption) {
+                        alert('Please select a winning option');
+                        return;
+                    }
+                    
+                    const option = selectedOption.getAttribute('data-option');
+                    const bet = bets.find(b => b.id == betId);
+                    
+                    // Set the winner
+                    bet.winner = option === 'a' ? bet.optionA : bet.optionB;
+                    bet.status = 'resolved';
+                    
+                    // Update user bets
+                    userBets.forEach(userBet => {
+                        if (userBet.betId == betId) {
+                            userBet.status = 'resolved';
+                            if (userBet.selectedOption === bet.winner) {
+                                userBet.winner = true;
+                                // In a real app, we would distribute winnings here
+                            }
+                        }
+                    });
+                    
+                    // Show notification
+                    showNotification(`Winner confirmed for "${bet.title}"`);
+                    
+                    // Re-render closed bets
+                    renderClosedBets();
+                    
+                    // Re-render user bets to show winner badges
+                    renderUserBets();
+                });
+            });
+        }
+        
+        // Create new bet
+        createBetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('bet-title').value;
+            const description = document.getElementById('bet-description').value;
+            const optionA = document.getElementById('option-a').value;
+            const optionB = document.getElementById('option-b').value;
+            const oddsA = parseFloat(document.getElementById('odds-a').value);
+            const oddsB = parseFloat(document.getElementById('odds-b').value);
+            
+            const newBet = {
+                id: bets.length + 1,
+                title,
+                description,
+                optionA,
+                optionB,
+                oddsA,
+                oddsB,
+                status: "open",
+                totalPool: 0,
+                betsPlaced: 0,
+                winner: null
+            };
+            
+            bets.push(newBet);
+            renderBets();
+            
+            // Reset form
+            createBetForm.reset();
+            
+            // Show notification
+            showNotification('Bet created successfully!');
+        });
+        
+        // Show notification
+        function showNotification(message) {
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Close bets after 5 seconds for demo purposes
+        setTimeout(() => {
+            bets.forEach(bet => {
+                if (bet.status === 'open') {
+                    bet.status = 'closed';
+                }
+            });
+            renderClosedBets();
+        }, 5000);
+        
+        // Initialize the app
+        renderBets();
+        showSection('bets');
+    </script>
+</body>
+</html>
